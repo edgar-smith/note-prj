@@ -10,7 +10,7 @@ export async function GET() {
 
   const notes = await prisma.note.findMany({
     where: { userId: session.user.id },
-    orderBy: { updatedAt: "desc" },
+    orderBy: { position: "asc" },
   });
 
   return NextResponse.json(notes);
@@ -32,10 +32,17 @@ export async function POST(request: Request) {
     );
   }
 
+  const maxPosition = await prisma.note.aggregate({
+    where: { userId: session.user.id },
+    _max: { position: true },
+  });
+  const nextPosition = (maxPosition._max.position ?? -1) + 1;
+
   const note = await prisma.note.create({
     data: {
       title: title.trim(),
       content: content.trim(),
+      position: nextPosition,
       userId: session.user.id,
     },
   });
