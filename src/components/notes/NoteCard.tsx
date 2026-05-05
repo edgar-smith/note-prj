@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Trash2, Eye, GripVertical } from "lucide-react";
+import { Trash2, Eye, GripVertical, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -57,6 +57,14 @@ export function NoteCard({
       >
         <Eye className="h-3.5 w-3.5" />
       </Button>
+      <Link
+        href={`/notes/${note.id}`}
+        className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "h-7 w-7 text-muted-foreground hover:text-foreground")}
+        aria-label={`Éditer "${note.title}"`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Pencil className="h-3.5 w-3.5" />
+      </Link>
       <Button
         variant="ghost"
         size="icon"

@@ -30,24 +30,29 @@ export default function EditNotePage({
   const [id, setId] = useState<string>("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [initialized, setInitialized] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     params.then((p) => setId(p.id));
   }, [params]);
 
-  const { isLoading, isError } = useQuery({
+  const { data: note, isLoading, isError } = useQuery({
     queryKey: ["note", id],
     queryFn: () => fetchNote(id),
     enabled: !!id,
     staleTime: 0,
     refetchOnWindowFocus: false,
-    select: (note) => {
-      setTitle((prev) => (prev === "" ? note.title : prev));
-      setContent((prev) => (prev === "" ? note.content : prev));
-      return note;
-    },
   });
+
+  // Initialize form fields once the note is loaded (only once)
+  useEffect(() => {
+    if (note && !initialized) {
+      setTitle(note.title);
+      setContent(note.content);
+      setInitialized(true);
+    }
+  }, [note, initialized]);
 
   const { mutate, isPending, error } = useMutation({
     mutationFn: async () => {
@@ -79,7 +84,7 @@ export default function EditNotePage({
     setIsDirty(true);
   }
 
-  if (isLoading || !id) {
+  if (isLoading || !id || !initialized) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
