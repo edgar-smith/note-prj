@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { LayoutTemplate, PanelRight } from "lucide-react";
 import {
   DropdownMenu,
