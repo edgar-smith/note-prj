@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Trash2, Eye, GripVertical, Pencil } from "lucide-react";
+import { Trash2, Eye, GripVertical, Pencil, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -48,29 +48,45 @@ export function NoteCard({
 
   const actions = (
     <div className="flex items-center gap-1 shrink-0">
+      {/* Aperçu in-page (comportement selon layout) */}
       <Button
         variant="ghost"
         size="icon"
         className="h-7 w-7 text-muted-foreground hover:text-foreground"
         onClick={(e) => { e.preventDefault(); onPreview(note); }}
         aria-label={`Aperçu "${note.title}"`}
+        title="Aperçu"
       >
         <Eye className="h-3.5 w-3.5" />
       </Button>
+      {/* Ouvrir la page vue dédiée */}
+      <Link
+        href={`/notes/${note.id}/view`}
+        className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "h-7 w-7 text-muted-foreground hover:text-foreground")}
+        aria-label={`Visualiser "${note.title}"`}
+        title="Visualiser (page)"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <BookOpen className="h-3.5 w-3.5" />
+      </Link>
+      {/* Éditer */}
       <Link
         href={`/notes/${note.id}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "h-7 w-7 text-muted-foreground hover:text-foreground")}
         aria-label={`Éditer "${note.title}"`}
+        title="Éditer"
         onClick={(e) => e.stopPropagation()}
       >
         <Pencil className="h-3.5 w-3.5" />
       </Link>
+      {/* Supprimer */}
       <Button
         variant="ghost"
         size="icon"
         className="h-7 w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
         onClick={(e) => { e.preventDefault(); onDelete(note); }}
         aria-label={`Supprimer "${note.title}"`}
+        title="Supprimer"
       >
         <Trash2 className="h-3.5 w-3.5" />
       </Button>

@@ -22,9 +22,10 @@ const MarkdownPreview = dynamic(() => import("@uiw/react-markdown-preview"), {
 interface NotePreviewDrawerProps {
   note: Note | null;
   onClose: () => void;
+  wide?: boolean;
 }
 
-export function NotePreviewDrawer({ note, onClose }: NotePreviewDrawerProps) {
+export function NotePreviewDrawer({ note, onClose, wide = false }: NotePreviewDrawerProps) {
   const formattedDate = note
     ? new Intl.DateTimeFormat("fr-FR", {
         day: "2-digit",
@@ -37,7 +38,7 @@ export function NotePreviewDrawer({ note, onClose }: NotePreviewDrawerProps) {
 
   return (
     <Sheet open={!!note} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="w-full sm:max-w-xl flex flex-col overflow-hidden">
+      <SheetContent className={cn("w-full flex flex-col overflow-hidden", wide ? "sm:max-w-[55vw]" : "sm:max-w-xl")}>
         <SheetHeader className="shrink-0 pb-4 border-b">
           <SheetTitle className="pr-6 leading-snug">{note?.title}</SheetTitle>
           <div className="flex items-center justify-between mt-1">

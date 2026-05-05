@@ -27,10 +27,12 @@ import { buttonVariants } from "@/components/ui/button";
 import { NoteCard } from "@/components/notes/NoteCard";
 import { DeleteNoteModal } from "@/components/notes/DeleteNoteModal";
 import { NotePreviewDrawer } from "@/components/notes/NotePreviewDrawer";
+import { NoteFullscreenModal } from "@/components/notes/NoteFullscreenModal";
 import { ViewModeToggle } from "@/components/notes/ViewModeToggle";
 import { useViewMode } from "@/hooks/useViewMode";
 import type { Note } from "@/types/note";
 import type { ViewMode } from "@/hooks/useViewMode";
+import type { LayoutMode } from "@/hooks/useLayoutMode";
 
 // ── Sortable item wrapper ─────────────────────────────────────
 function SortableNoteCard({
@@ -81,7 +83,11 @@ async function fetchNotes(): Promise<Note[]> {
 }
 
 // ── Main component ─────────────────────────────────────────────
-export function NoteList() {
+interface NoteListProps {
+  layoutMode: LayoutMode;
+}
+
+export function NoteList({ layoutMode }: NoteListProps) {
   const queryClient = useQueryClient();
   const { mode, setMode } = useViewMode();
   const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
@@ -96,12 +102,10 @@ export function NoteList() {
   const { data: serverNotes, isLoading, isError } = useQuery({
     queryKey: ["notes"],
     queryFn: fetchNotes,
-    select: (data) => data,
   });
 
   const notes = localNotes ?? serverNotes;
 
-  // Sync local state when server data changes (e.g. after delete)
   const { mutate: reorder } = useMutation({
     mutationFn: async (ids: string[]) => {
       const res = await fetch("/api/notes/reorder", {
@@ -219,10 +223,23 @@ export function NoteList() {
           setLocalNotes(null);
         }}
       />
-      <NotePreviewDrawer
-        note={noteToPreview}
-        onClose={() => setNoteToPreview(null)}
-      />
+
+      {/* Focus mode: fullscreen overlay */}
+      {layoutMode === "focus" && (
+        <NoteFullscreenModal
+          note={noteToPreview}
+          onClose={() => setNoteToPreview(null)}
+        />
+      )}
+
+      {/* Split mode: wide drawer */}
+      {layoutMode === "split" && (
+        <NotePreviewDrawer
+          note={noteToPreview}
+          onClose={() => setNoteToPreview(null)}
+          wide
+        />
+      )}
     </>
   );
 }
