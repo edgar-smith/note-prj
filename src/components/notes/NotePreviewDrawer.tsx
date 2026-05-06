@@ -38,7 +38,7 @@ export function NotePreviewDrawer({ note, onClose, wide = false }: NotePreviewDr
 
   return (
     <Sheet open={!!note} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className={cn("w-full flex flex-col overflow-hidden", wide ? "sm:max-w-[55vw]" : "sm:max-w-xl")}>
+      <SheetContent className={cn("w-full flex flex-col overflow-hidden", wide ? "sm:max-w-[50vw]" : "sm:max-w-sm")}>
         <SheetHeader className="shrink-0 pb-4 border-b">
           <SheetTitle className="pr-6 leading-snug">{note?.title}</SheetTitle>
           <div className="flex items-center justify-between mt-1">
