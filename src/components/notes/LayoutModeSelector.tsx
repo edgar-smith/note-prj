@@ -6,7 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -44,9 +43,9 @@ export function LayoutModeSelector({ mode, onChange }: LayoutModeSelectorProps) 
         <span className="hidden sm:inline">{current.label}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-52">
-        <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">
+        <p className="px-2 py-1.5 text-xs text-muted-foreground">
           Mode de mise en page
-        </DropdownMenuLabel>
+        </p>
         <DropdownMenuSeparator />
         {layouts.map((l) => (
           <DropdownMenuItem
